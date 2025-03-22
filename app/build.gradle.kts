@@ -42,6 +42,12 @@ android {
 
 dependencies {
 
+    implementation(libs.material)
+    implementation(libs.androidx.appcompat)
+
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.barcode.scanning)
     implementation(libs.androidx.camera.camera2)

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_qr_code">
+
+    <fragment
+        android:id="@+id/nav_qr_code"
+        android:name="com.unichristus.leitor_fiscal.ui.QrCodeFragment"
+        android:label="QR Code"
+        tools:layout="@layout/fragment_qr_code" />
+
+    <fragment
+        android:id="@+id/nav_barcode"
+        android:name="com.unichristus.leitor_fiscal.ui.BarcodeFragment"
+        android:label="Códigos de Barras"
+        tools:layout="@layout/fragment_barcode" />
+
+</navigation>

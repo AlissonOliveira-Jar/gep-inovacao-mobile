@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_qr_code"
+            android:title="Modo QR Code"
+            android:icon="@drawable/ic_qr_code"
+            tools:ignore="HardcodedText" />
+        <item
+            android:id="@+id/nav_barcode"
+            android:title="Modo Código de Barras"
+            android:icon="@drawable/ic_barcode"
+            tools:ignore="HardcodedText" />
+    </group>
+</menu>

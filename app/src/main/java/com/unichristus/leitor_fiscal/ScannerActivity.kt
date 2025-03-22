@@ -23,19 +23,27 @@ import java.util.concurrent.Executors
 class ScannerActivity : ComponentActivity() {
 
     private lateinit var binding: ActivityScannerBinding
-
     private lateinit var cameraSelector: CameraSelector
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private lateinit var processCameraProvider: ProcessCameraProvider
     private lateinit var cameraPreview: Preview
     private lateinit var imageAnalysis: ImageAnalysis
+    private var formats: List<Int> = listOf(Barcode.FORMAT_QR_CODE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityScannerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        cameraSelector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
+        formats = intent.getIntegerArrayListExtra("formats")?.toList() ?: formats
+        setupCamera()
+    }
+
+    private fun setupCamera() {
+        cameraSelector = CameraSelector.Builder()
+            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+            .build()
+
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
             processCameraProvider = cameraProviderFuture.get()
@@ -45,17 +53,26 @@ class ScannerActivity : ComponentActivity() {
     }
 
     private fun bindCameraPreview() {
-        cameraPreview = Preview.Builder().setTargetRotation(binding.previewView.display.rotation).build()
-        cameraPreview.setSurfaceProvider(binding.previewView.surfaceProvider)
+        cameraPreview = Preview.Builder()
+            .setTargetRotation(binding.previewView.display.rotation)
+            .build()
+
+        cameraPreview.surfaceProvider = binding.previewView.surfaceProvider
         processCameraProvider.bindToLifecycle(this, cameraSelector, cameraPreview)
     }
 
     private fun bindInputAnalyzer() {
-        val barcodeScanner: BarcodeScanner = BarcodeScanning.getClient(
-            BarcodeScannerOptions.Builder()
-                .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-                .build()
-        )
+        val formatsArray = formats.toIntArray()
+
+        val options = BarcodeScannerOptions.Builder()
+            .apply {
+                for (format in formatsArray) {
+                    setBarcodeFormats(format)
+                }
+            }
+            .build()
+
+        val barcodeScanner = BarcodeScanning.getClient(options)
 
         imageAnalysis = ImageAnalysis.Builder()
             .setTargetRotation(binding.previewView.display.rotation)
@@ -74,30 +91,40 @@ class ScannerActivity : ComponentActivity() {
     private fun processImageProxy(
         barcodeScanner: BarcodeScanner,
         imageProxy: ImageProxy
-    ){
-        val inputImage = InputImage.fromMediaImage(imageProxy.image!!, imageProxy.imageInfo.rotationDegrees)
+    ) {
+        val inputImage = InputImage.fromMediaImage(
+            imageProxy.image!!,
+            imageProxy.imageInfo.rotationDegrees
+        )
 
         barcodeScanner.process(inputImage)
             .addOnSuccessListener { barcodes ->
                 if (barcodes.isNotEmpty()) {
-                    onScan?.invoke(barcodes)
-                    onScan = null
+                    val barcodeValues = ArrayList<String>()
+                    val barcodeTypes = ArrayList<Int>()
+                    barcodes.forEach { barcode ->
+                        barcode.rawValue?.let {
+                            barcodeValues.add(it)
+                            barcodeTypes.add(barcode.valueType)
+                        }
+                    }
+                    val resultIntent = Intent().apply {
+                        putStringArrayListExtra("barcodes", barcodeValues)
+                        putIntegerArrayListExtra("barcodeTypes", barcodeTypes)
+                    }
+                    setResult(RESULT_OK, resultIntent)
                     finish()
                 }
             }
-            .addOnFailureListener {
-                it.printStackTrace()
-            }.addOnCompleteListener {
-                imageProxy.close()
-            }
+            .addOnFailureListener { it.printStackTrace() }
+            .addOnCompleteListener { imageProxy.close() }
     }
 
     companion object {
-        private var onScan: ((barcodes: List<Barcode>) -> Unit)? = null
-        fun startScanner(context: Context, onScan: (barcodes: List<Barcode>) -> Unit) {
-            this.onScan = onScan
-            Intent(context, ScannerActivity::class.java).also {
-                context.startActivity(it)
+        fun startScanner(context: Context, formats: List<Int>) {
+            Intent(context, ScannerActivity::class.java).apply {
+                putIntegerArrayListExtra("formats", ArrayList(formats))
+                context.startActivity(this)
             }
         }
     }
