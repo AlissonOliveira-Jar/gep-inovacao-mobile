@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Leitor Fiscal</string>
+    <string name="title_activity_scanner">ScannerActivity</string>
+</resources>
