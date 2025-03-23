@@ -1,4 +1,5 @@
-# Arquivos especificos do Android Studio (complementando o .idea/)
+# Arquivos especificos do Android Studio
+.idea/
 /.idea/codeStyles/
 /.idea/runConfigurations/
 /.idea/shelf/
@@ -8,6 +9,8 @@
 /.idea/misc.xml
 /.idea/vcs.xml
 *.iws
+local.properties
+*.iml
 
 # Gradle e builds
 .gradle/
