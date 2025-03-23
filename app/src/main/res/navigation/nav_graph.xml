@@ -17,4 +17,10 @@
         android:label="Códigos de Barras"
         tools:layout="@layout/fragment_barcode" />
 
+    <fragment
+        android:id="@+id/nav_scanner"
+        android:name="com.unichristus.leitor_fiscal.ui.ScannerFragment"
+        android:label="Digitalizador"
+        tools:layout="@layout/fragment_scanner" />
+
 </navigation>

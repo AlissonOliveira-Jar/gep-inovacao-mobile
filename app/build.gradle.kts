@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+
 android {
     namespace = "com.unichristus.leitor_fiscal"
     compileSdk = 35
@@ -44,6 +45,7 @@ dependencies {
 
     implementation(libs.material)
     implementation(libs.androidx.appcompat)
+    implementation(libs.play.services.mlkit.document.scanner)
 
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.fragment.ktx)
