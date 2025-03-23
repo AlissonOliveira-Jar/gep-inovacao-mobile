@@ -9,6 +9,13 @@
     android:gravity="bottom"
     android:padding="16dp">
 
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/ic_launcher_foreground"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/toggle_info_description"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

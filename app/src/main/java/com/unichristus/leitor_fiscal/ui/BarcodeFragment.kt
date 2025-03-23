@@ -3,12 +3,16 @@ package com.unichristus.leitor_fiscal.ui
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -49,6 +53,17 @@ class BarcodeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonOpenScanner.setOnClickListener { checkCameraPermission() }
+
+        binding.textViewBarcodeType.setOnLongClickListener {
+            val content = binding.textViewBarcodeType.text
+            if (content.isNotEmpty()) {
+                copyToClipboard(content)
+                Toast.makeText(context, "Código copiado!", Toast.LENGTH_SHORT).show()
+                true
+            } else {
+                false
+            }
+        }
     }
 
     private fun checkCameraPermission() {
@@ -79,6 +94,12 @@ class BarcodeFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun updateUI(barcodeValue: String) {
         binding.textViewBarcodeType.text = "Código: $barcodeValue"
+    }
+
+    private fun copyToClipboard(text: CharSequence) {
+        val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("Código de Barras", text)
+        clipboardManager.setPrimaryClip(clipData)
     }
 
     private fun showPermissionRationale() {

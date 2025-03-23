@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Leitor Fiscal</string>
     <string name="title_activity_scanner">ScannerActivity</string>
+    <string name="button_open_scanner">Abrir Scanner QR Code</string>
+    <string name="button_open_barcode_scanner">Abrir Scanner de Código de Barras</string>
+    <string name="barcode_type">Tipo</string>
+    <string name="barcode_content">Conteúdo</string>
+    <string name="toggle_info_description">Mostrar/ocultar informações adicionais</string>
 </resources>

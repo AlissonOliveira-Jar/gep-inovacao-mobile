@@ -120,6 +120,13 @@ class ScannerActivity : ComponentActivity() {
             .addOnCompleteListener { imageProxy.close() }
     }
 
+    override fun onStop() {
+        super.onStop()
+        if (::processCameraProvider.isInitialized) {
+            processCameraProvider.unbindAll()
+        }
+    }
+
     companion object {
         fun startScanner(context: Context, formats: List<Int>) {
             Intent(context, ScannerActivity::class.java).apply {
