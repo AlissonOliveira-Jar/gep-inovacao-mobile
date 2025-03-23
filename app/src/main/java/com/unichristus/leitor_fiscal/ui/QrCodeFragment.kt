@@ -92,20 +92,31 @@ class QrCodeFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     fun updateUI(rawValue: String, valueType: Int) {
-        val formattedType = when (valueType) {
-            Barcode.TYPE_URL -> "URL"
-            Barcode.TYPE_CONTACT_INFO -> "Contato"
-            Barcode.TYPE_CALENDAR_EVENT -> "Evento"
-            Barcode.TYPE_EMAIL -> "E-mail"
-            Barcode.TYPE_PHONE -> "Telefone"
-            Barcode.TYPE_SMS -> "SMS"
-            Barcode.TYPE_WIFI -> "Wi-Fi"
-            Barcode.TYPE_GEO -> "Localização"
-            Barcode.TYPE_DRIVER_LICENSE -> "CNH"
-            else -> "Outro Tipo"
+        if (rawValue.length >= 44 && rawValue.contains("|")) {
+            binding.textViewQrType.text = "Tipo: Nota Fiscal Eletrônica (NF-e)"
+            binding.textViewQrContent.text = "Chave de Acesso: ${rawValue.substringBefore("|")}"
+            processNfeContent(rawValue)
+        } else {
+            val formattedType = when (valueType) {
+                Barcode.TYPE_URL -> "URL"
+                Barcode.TYPE_CONTACT_INFO -> "Contato"
+                Barcode.TYPE_CALENDAR_EVENT -> "Evento"
+                Barcode.TYPE_EMAIL -> "E-mail"
+                Barcode.TYPE_PHONE -> "Telefone"
+                Barcode.TYPE_SMS -> "SMS"
+                Barcode.TYPE_WIFI -> "Wi-Fi"
+                Barcode.TYPE_GEO -> "Localização"
+                Barcode.TYPE_DRIVER_LICENSE -> "CNH"
+                else -> "Outro Tipo"
+            }
+            binding.textViewQrType.text = "Tipo: $formattedType"
+            binding.textViewQrContent.text = formatBarcodeData(rawValue, valueType)
         }
-        binding.textViewQrType.text = "Tipo: $formattedType"
-        binding.textViewQrContent.text = formatBarcodeData(rawValue, valueType)
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun processNfeContent(nfeRawData: String) {
+        // Descobrir como faz isso
     }
 
     private fun formatBarcodeData(rawValue: String, valueType: Int): String {
@@ -126,7 +137,14 @@ class QrCodeFragment : Fragment() {
     }
 
     private fun showPermissionRationale() {
-
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Permissão de Câmera Necessária")
+            .setMessage("O aplicativo precisa da permissão da câmera para escanear códigos QR.")
+            .setPositiveButton("Entendi") { _, _ ->
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     override fun onDestroyView() {
