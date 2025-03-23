@@ -44,6 +44,7 @@ dependencies {
 
     implementation(libs.material)
     implementation(libs.androidx.appcompat)
+    implementation(libs.document.scanning)
 
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.fragment.ktx)
