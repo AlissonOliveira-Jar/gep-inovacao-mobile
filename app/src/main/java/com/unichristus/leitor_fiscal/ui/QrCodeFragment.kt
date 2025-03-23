@@ -93,7 +93,7 @@ class QrCodeFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     fun updateUI(rawValue: String, valueType: Int) {
         if (rawValue.length >= 44 && rawValue.contains("|")) {
-            binding.textViewQrType.text = "Tipo: Nota Fiscal Eletrônica (NF-e)"
+            binding.textViewQrType.text = "Nota Fiscal Eletrônica (NF-e)"
             binding.textViewQrContent.text = "Chave de Acesso: ${rawValue.substringBefore("|")}"
             processNfeContent(rawValue)
         } else {
