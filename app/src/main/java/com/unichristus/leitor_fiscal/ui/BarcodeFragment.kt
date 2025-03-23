@@ -103,7 +103,14 @@ class BarcodeFragment : Fragment() {
     }
 
     private fun showPermissionRationale() {
-
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Permissão de Câmera Necessária")
+            .setMessage("O aplicativo precisa da permissão da câmera para escanear códigos de barras.")
+            .setPositiveButton("Entendi") { _, _ ->
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     override fun onDestroyView() {
