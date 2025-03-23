@@ -1,15 +1,35 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+# Arquivos especificos do Android Studio (complementando o .idea/)
+/.idea/codeStyles/
+/.idea/runConfigurations/
+/.idea/shelf/
+/.idea/.name
+/.idea/compiler.xml
+/.idea/jarRepositories.xml
+/.idea/misc.xml
+/.idea/vcs.xml
+*.iws
+
+# Gradle e builds
+.gradle/
+gradle-app.setting/
+!gradle-wrapper.jar
+/build/
+build/
+output.json
+
+# Arquivos temporarios/gerados
+*.log
+*.bak
+*.swp
+*.swo
+*.hprof
+*.orig
+
+# Chaves/credenciais (evite commit acidental)
+debug.keystore
+release.keystore
+*.jks
+
+# Firebase/Crashlytics (se aplicavel)
+google-services.json
+fabric.properties
