@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lector Fiscal</string>
+
+    <string name="title_activity_scanner">ScannerActivity</string>
+    <string name="button_open_scanner">Abrir Escáner Código QR</string>
+    <string name="button_open_barcode_scanner">Abrir Escáner Código de Barras</string>
+    <string name="scan_document_button">Abrir Escáner de Documentos</string>
+    <string name="allow_camera_button">Permitir Cámara</string>
+    <string name="cancel_button">Cancelar</string>
+    <string name="understand_button">Entendido</string>
+    <string name="camera_permission_title">Permiso de Cámara Requerido</string>
+    <string name="camera_permission_message">Sin acceso a la cámara no es posible escanear códigos de barras.</string>
+    <string name="camera_permission_needed_title">Permiso de Cámara Necesario</string>
+    <string name="qr_barcode_permission_message">La aplicación necesita permiso de la cámara para escanear códigos.</string>
+    <string name="barcode_type_label">Tipo</string>
+    <string name="barcode_content_label">Contenido</string>
+    <string name="qr_type_label">Tipo:</string>
+    <string name="qr_content_label">Contenido:</string>
+    <string name="nfe_type_label">Factura Electrónica (NF-e)</string>
+    <string name="nfe_access_key_label">Clave de Acceso:</string>
+    <string name="url_label">URL:</string>
+    <string name="contact_label">Contacto:</string>
+    <string name="wifi_label">Wi-Fi:</string>
+    <string name="event_label">Evento:</string>
+    <string name="email_label">Correo Electrónico:</string>
+    <string name="other_type_label">Otro Tipo</string>
+    <string name="barcode_label">Código:</string>
+    <string name="content_copied_toast">¡Contenido copiado!</string>
+    <string name="code_copied_toast">¡Código copiado!</string>
+    <string name="text_copied_toast">¡Texto copiado!</string>
+    <string name="scanner_error_starting">Error al iniciar el escáner.</string>
+    <string name="scanner_result_null">Resultado del escaneo nulo.</string>
+    <string name="scanner_cancelled_failed">Escaneo cancelado o falló.</string>
+    <string name="processing_image_text">Procesando imagen para extraer texto…</string>
+    <string name="text_extraction_error">Error al extraer texto: %s</string>
+    <string name="image_loading_error">Error al cargar imagen: %s</string>
+    <string name="no_text_found">No se encontró texto en la imagen.</string>
+    <string name="scanned_text_label">Texto escaneado:</string>
+    <string name="last_scanned_text_label">Último texto escaneado:</string>
+    <string name="scan_to_start_message">Escanee un documento para empezar.</string>
+    <string name="status_label">Estado:</string>
+    <string name="no_image_for_text">Escaneo completo, pero no hay imagen para procesar texto.</string>
+    <string name="toggle_info_description">Mostrar/ocultar información adicional</string>
+    <string name="clipboard_scanned_text_label">Texto Escaneado</string>
+</resources>
