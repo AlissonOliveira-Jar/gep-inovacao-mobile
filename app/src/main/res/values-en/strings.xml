@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fiscal Reader</string>
+
+    <string name="title_activity_scanner">ScannerActivity</string>
+    <string name="button_open_scanner">Open QR Code Scanner</string>
+    <string name="button_open_barcode_scanner">Open Barcode Scanner</string>
+    <string name="scan_document_button">Open Document Scanner</string>
+    <string name="allow_camera_button">Allow Camera</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="understand_button">Got It</string>
+    <string name="camera_permission_title">Camera Permission Required</string>
+    <string name="camera_permission_message">Without camera access, it\'s not possible to scan barcodes.</string>
+    <string name="camera_permission_needed_title">Camera Permission Needed</string>
+    <string name="qr_barcode_permission_message">The app needs camera permission to scan codes.</string>
+    <string name="barcode_type_label">Type</string>
+    <string name="barcode_content_label">Content</string>
+    <string name="qr_type_label">Type:</string>
+    <string name="qr_content_label">Content:</string>
+    <string name="nfe_type_label">Electronic Invoice (NF-e)</string>
+    <string name="nfe_access_key_label">Access Key:</string>
+    <string name="url_label">URL:</string>
+    <string name="contact_label">Contact:</string>
+    <string name="wifi_label">Wi-Fi:</string>
+    <string name="event_label">Event:</string>
+    <string name="email_label">Email:</string>
+    <string name="other_type_label">Other Type</string>
+    <string name="barcode_label">Code:</string>
+    <string name="content_copied_toast">Content copied!</string>
+    <string name="code_copied_toast">Code copied!</string>
+    <string name="text_copied_toast">Text copied!</string>
+    <string name="scanner_error_starting">Error starting scanner.</string>
+    <string name="scanner_result_null">Scan result is null.</string>
+    <string name="scanner_cancelled_failed">Scan cancelled or failed.</string>
+    <string name="processing_image_text">Processing image to extract text…</string>
+    <string name="text_extraction_error">Error extracting text: %s</string>
+    <string name="image_loading_error">Error loading image: %s</string>
+    <string name="no_text_found">No text found in the image.</string>
+    <string name="scanned_text_label">Scanned text:</string>
+    <string name="last_scanned_text_label">Last scanned text:</string>
+    <string name="scan_to_start_message">Scan a document to start.</string>
+    <string name="status_label">Status:</string>
+    <string name="no_image_for_text">Scan complete, but no image to process text.</string>
+    <string name="toggle_info_description">Show/hide additional information</string>
+    <string name="clipboard_scanned_text_label">Scanned Text</string>
+</resources>

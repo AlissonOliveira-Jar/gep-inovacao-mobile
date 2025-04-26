@@ -43,6 +43,7 @@ android {
 
 dependencies {
 
+    implementation(libs.text.recognition)
     implementation(libs.material)
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.mlkit.document.scanner)

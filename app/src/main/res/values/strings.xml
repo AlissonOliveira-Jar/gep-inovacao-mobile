@@ -1,9 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Leitor Fiscal</string>
+
     <string name="title_activity_scanner">ScannerActivity</string>
     <string name="button_open_scanner">Abrir Scanner QR Code</string>
     <string name="button_open_barcode_scanner">Abrir Scanner de Código de Barras</string>
-    <string name="barcode_type">Tipo</string>
-    <string name="barcode_content">Conteúdo</string>
+    <string name="scan_document_button">Abrir Scanner de Documentos</string>
+    <string name="allow_camera_button">Permitir Câmera</string>
+    <string name="cancel_button">Cancelar</string>
+    <string name="understand_button">Entendi</string>
+    <string name="camera_permission_title">Permissão de Câmera Requerida</string>
+    <string name="camera_permission_message">Sem acesso à câmera não é possível escanear códigos de barras.</string>
+    <string name="camera_permission_needed_title">Permissão de Câmera Necessária</string>
+    <string name="qr_barcode_permission_message">O aplicativo precisa da permissão da câmera para escanear códigos.</string>
+    <string name="barcode_type_label">Tipo</string>
+    <string name="barcode_content_label">Conteúdo</string>
+    <string name="qr_type_label">Tipo:</string>
+    <string name="qr_content_label">Conteúdo:</string>
+    <string name="nfe_type_label">Nota Fiscal Eletrônica (NF-e)</string>
+    <string name="nfe_access_key_label">Chave de Acesso:</string>
+    <string name="url_label">URL:</string>
+    <string name="contact_label">Contato:</string>
+    <string name="wifi_label">Wi-Fi:</string>
+    <string name="event_label">Evento:</string>
+    <string name="email_label">E-mail:</string>
+    <string name="other_type_label">Outro Tipo</string>
+    <string name="barcode_label">Código:</string>
+    <string name="content_copied_toast">Conteúdo copiado!</string>
+    <string name="code_copied_toast">Código copiado!</string>
+    <string name="text_copied_toast">Texto copiado!</string>
+    <string name="scanner_error_starting">Erro ao iniciar o scanner.</string>
+    <string name="scanner_result_null">Resultado da digitalização nulo.</string>
+    <string name="scanner_cancelled_failed">Digitalização cancelada ou falhou.</string>
+    <string name="processing_image_text">Processando imagem para extrair texto…</string>
+    <string name="text_extraction_error">Erro ao extrair texto: %s</string>
+    <string name="image_loading_error">Erro ao carregar imagem: %s</string>
+    <string name="no_text_found">Nenhum texto encontrado na imagem.</string>
+    <string name="scanned_text_label">Texto digitalizado:</string>
+    <string name="last_scanned_text_label">Último texto digitalizado:</string>
+    <string name="scan_to_start_message">Digitalize um documento para começar.</string>
+    <string name="status_label">Status:</string>
+    <string name="no_image_for_text">Digitalização completa, mas nenhuma imagem para processar texto.</string>
     <string name="toggle_info_description">Mostrar/ocultar informações adicionais</string>
+    <string name="clipboard_scanned_text_label">Texto Digitalizado</string>
 </resources>
