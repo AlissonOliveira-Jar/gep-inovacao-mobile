@@ -43,4 +43,15 @@
     <string name="no_image_for_text">Scan complete, but no image to process text.</string>
     <string name="toggle_info_description">Show/hide additional information</string>
     <string name="clipboard_scanned_text_label">Scanned Text</string>
+    <string name="phone_label">Phone</string>
+    <string name="sms_label">SMS</string>
+    <string name="geo_label">Location</string>
+    <string name="driver_license_label">Driver License</string>
+    <string name="clipboard_qr_code_label">QR Code Content</string>
+    <string name="menu_qr_code">Scan QR Code</string>
+    <string name="menu_document_scanner">Scan Document</string>
+    <string name="menu_qr_code_mode">QR Code Mode</string>
+    <string name="menu_scanner_mode">Scanner Mode</string>
+    <string name="nav_label_qr_code">QR Code</string>
+    <string name="nav_label_scanner">Scanner</string>
 </resources>

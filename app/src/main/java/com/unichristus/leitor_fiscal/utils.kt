@@ -14,11 +14,11 @@ fun Context.isPermissionGranted(permission: String): Boolean {
 
 inline fun Context.cameraPermissionRequest(crossinline positive: () -> Unit) {
     AlertDialog.Builder(this)
-        .setTitle("Permissão de Câmera Requerido")
-        .setMessage("Sem acesso à câmera não é possível escanear códigos de barras.")
-        .setPositiveButton("Permitir Câmera") { _, _ ->
+        .setTitle(this.getString(R.string.camera_permission_title))
+        .setMessage(this.getString(R.string.camera_permission_message))
+        .setPositiveButton(this.getString(R.string.allow_camera_button)) { _, _ ->
             positive.invoke()
-        }.setNegativeButton("Cancelar") { _, _ ->
+        }.setNegativeButton(this.getString(R.string.cancel_button)) { _, _ ->
 
         }.show()
 }
