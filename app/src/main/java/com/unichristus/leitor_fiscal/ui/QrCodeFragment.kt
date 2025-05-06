@@ -6,7 +6,6 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.mlkit.vision.barcode.common.Barcode
+import com.unichristus.leitor_fiscal.R
 import com.unichristus.leitor_fiscal.ScannerActivity
 import com.unichristus.leitor_fiscal.databinding.FragmentQrCodeBinding
 
@@ -60,8 +60,8 @@ class QrCodeFragment : Fragment() {
         binding.textViewQrContent.setOnLongClickListener {
             val content = binding.textViewQrContent.text
             if (content.isNotEmpty()) {
-                copyToClipboard(content)
-                Toast.makeText(context, "Conteúdo copiado!", Toast.LENGTH_SHORT).show()
+                copyToClipboard(content, getString(R.string.clipboard_qr_code_label))
+                Toast.makeText(context, getString(R.string.content_copied_toast), Toast.LENGTH_SHORT).show()
                 true
             } else {
                 false
@@ -87,63 +87,62 @@ class QrCodeFragment : Fragment() {
             requireContext(),
             listOf(Barcode.FORMAT_QR_CODE)
         )
-        scannerLauncher.launch(Intent(context, ScannerActivity::class.java))
     }
 
     @SuppressLint("SetTextI18n")
     fun updateUI(rawValue: String, valueType: Int) {
         if (rawValue.length >= 44 && rawValue.contains("|")) {
-            binding.textViewQrType.text = "Nota Fiscal Eletrônica (NF-e)"
-            binding.textViewQrContent.text = "Chave de Acesso: ${rawValue.substringBefore("|")}"
+            binding.textViewQrType.text = getString(R.string.nfe_type_label)
+            binding.textViewQrContent.text = "${getString(R.string.nfe_access_key_label)} ${rawValue.substringBefore("|")}"
             processNfeContent(rawValue)
         } else {
             val formattedType = when (valueType) {
-                Barcode.TYPE_URL -> "URL"
-                Barcode.TYPE_CONTACT_INFO -> "Contato"
-                Barcode.TYPE_CALENDAR_EVENT -> "Evento"
-                Barcode.TYPE_EMAIL -> "E-mail"
-                Barcode.TYPE_PHONE -> "Telefone"
-                Barcode.TYPE_SMS -> "SMS"
-                Barcode.TYPE_WIFI -> "Wi-Fi"
-                Barcode.TYPE_GEO -> "Localização"
-                Barcode.TYPE_DRIVER_LICENSE -> "CNH"
-                else -> "Outro Tipo"
+                Barcode.TYPE_URL -> getString(R.string.url_label)
+                Barcode.TYPE_CONTACT_INFO -> getString(R.string.contact_label)
+                Barcode.TYPE_CALENDAR_EVENT -> getString(R.string.event_label)
+                Barcode.TYPE_EMAIL -> getString(R.string.email_label)
+                Barcode.TYPE_PHONE -> getString(R.string.phone_label)
+                Barcode.TYPE_SMS -> getString(R.string.sms_label)
+                Barcode.TYPE_WIFI -> getString(R.string.wifi_label)
+                Barcode.TYPE_GEO -> getString(R.string.geo_label)
+                Barcode.TYPE_DRIVER_LICENSE -> getString(R.string.driver_license_label)
+                else -> getString(R.string.other_type_label)
             }
-            binding.textViewQrType.text = "Tipo: $formattedType"
+            binding.textViewQrType.text = "${getString(R.string.qr_type_label)} $formattedType"
             binding.textViewQrContent.text = formatBarcodeData(rawValue, valueType)
         }
     }
 
     @Suppress("UNUSED_PARAMETER")
     private fun processNfeContent(nfeRawData: String) {
-        // Descobrir como faz isso
+
     }
 
     private fun formatBarcodeData(rawValue: String, valueType: Int): String {
         return when (valueType) {
-            Barcode.TYPE_URL -> "URL: $rawValue"
-            Barcode.TYPE_CONTACT_INFO -> "Contato: $rawValue"
-            Barcode.TYPE_WIFI -> "Wi-Fi: $rawValue"
-            Barcode.TYPE_CALENDAR_EVENT -> "Evento: $rawValue"
-            Barcode.TYPE_EMAIL -> "E-mail: $rawValue"
-            else -> "Conteúdo: $rawValue"
+            Barcode.TYPE_URL -> "${getString(R.string.url_label)} $rawValue"
+            Barcode.TYPE_CONTACT_INFO -> "${getString(R.string.contact_label)} $rawValue"
+            Barcode.TYPE_WIFI -> "${getString(R.string.wifi_label)} $rawValue"
+            Barcode.TYPE_CALENDAR_EVENT -> "${getString(R.string.event_label)} $rawValue"
+            Barcode.TYPE_EMAIL -> "${getString(R.string.email_label)} $rawValue"
+            else -> "${getString(R.string.qr_content_label)} $rawValue"
         }
     }
 
-    private fun copyToClipboard(text: CharSequence) {
+    private fun copyToClipboard(text: CharSequence, label: String) {
         val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData = ClipData.newPlainText("Conteúdo do QR Code", text)
+        val clipData = ClipData.newPlainText(label, text)
         clipboardManager.setPrimaryClip(clipData)
     }
 
     private fun showPermissionRationale() {
         androidx.appcompat.app.AlertDialog.Builder(requireContext())
-            .setTitle("Permissão de Câmera Necessária")
-            .setMessage("O aplicativo precisa da permissão da câmera para escanear códigos QR.")
-            .setPositiveButton("Entendi") { _, _ ->
+            .setTitle(getString(R.string.camera_permission_needed_title))
+            .setMessage(getString(R.string.qr_barcode_permission_message))
+            .setPositiveButton(getString(R.string.understand_button)) { _, _ ->
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.cancel_button), null)
             .show()
     }
 

@@ -43,4 +43,15 @@
     <string name="no_image_for_text">Digitalização completa, mas nenhuma imagem para processar texto.</string>
     <string name="toggle_info_description">Mostrar/ocultar informações adicionais</string>
     <string name="clipboard_scanned_text_label">Texto Digitalizado</string>
+    <string name="phone_label">Telefone</string>
+    <string name="sms_label">SMS</string>
+    <string name="geo_label">Localização</string>
+    <string name="driver_license_label">CNH</string>
+    <string name="clipboard_qr_code_label">Conteúdo do QR Code</string>
+    <string name="menu_qr_code">Escanear QR Code</string>
+    <string name="menu_document_scanner">Escanear Documento</string>
+    <string name="menu_qr_code_mode">Modo QR Code</string>
+    <string name="menu_scanner_mode">Modo Digitalizador</string>
+    <string name="nav_label_qr_code">QR Code</string>
+    <string name="nav_label_scanner">Digitalizador</string>
 </resources>

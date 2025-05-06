@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         appBarConfiguration = AppBarConfiguration(
-            topLevelDestinationIds = setOf(R.id.nav_qr_code, R.id.nav_barcode),
+            topLevelDestinationIds = setOf(R.id.nav_qr_code, R.id.nav_scanner),
             drawerLayout = binding.drawerLayout
         )
 

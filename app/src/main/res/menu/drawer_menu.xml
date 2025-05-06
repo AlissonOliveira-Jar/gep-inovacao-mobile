@@ -5,18 +5,13 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_qr_code"
-            android:title="Modo QR Code"
+            android:title="@string/menu_qr_code_mode"
             android:icon="@drawable/ic_qr_code"
-            tools:ignore="HardcodedText" />
-        <item
-            android:id="@+id/nav_barcode"
-            android:title="Modo Código de Barras"
-            android:icon="@drawable/ic_barcode"
-            tools:ignore="HardcodedText" />
+            />
         <item
             android:id="@+id/nav_scanner"
             android:icon="@drawable/ic_scanner"
-            android:title="Modo Digitalizador"
-            tools:ignore="HardcodedText" />
+            android:title="@string/menu_scanner_mode"
+            />
     </group>
 </menu>
