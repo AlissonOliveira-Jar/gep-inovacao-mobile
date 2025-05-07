@@ -54,4 +54,6 @@
     <string name="menu_scanner_mode">Modo Escáner</string>
     <string name="nav_label_qr_code">Código QR</string>
     <string name="nav_label_scanner">Escáner</string>
+    <string name="button_clear_scan">Limpiar</string>
+    <string name="scan_cleared_toast">¡Escaneo limpiado!</string>
 </resources>

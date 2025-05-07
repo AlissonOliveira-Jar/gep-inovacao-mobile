@@ -35,4 +35,16 @@
         android:text="@string/scan_to_start_message"
         />
 
+    <Button
+        android:id="@+id/button_clear_scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/button_clear_scan"
+        android:backgroundTint="@color/red_error"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        />
+
 </LinearLayout>

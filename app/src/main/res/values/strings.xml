@@ -54,4 +54,6 @@
     <string name="menu_scanner_mode">Modo Digitalizador</string>
     <string name="nav_label_qr_code">QR Code</string>
     <string name="nav_label_scanner">Digitalizador</string>
+    <string name="button_clear_scan">Limpar</string>
+    <string name="scan_cleared_toast">Scan limpo!</string>
 </resources>

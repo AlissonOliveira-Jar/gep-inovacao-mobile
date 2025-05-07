@@ -92,6 +92,7 @@ class ScannerFragment : Fragment() {
             binding.textViewScannerResult.text = getString(R.string.scan_to_start_message)
             binding.textViewScannerLabel.text = getString(R.string.status_label)
         }
+
         binding.buttonOpenScanner.text = getString(R.string.scan_document_button)
         binding.buttonOpenScanner.setOnClickListener { checkCameraPermission() }
 
@@ -101,12 +102,26 @@ class ScannerFragment : Fragment() {
                 content != getString(R.string.scan_to_start_message) &&
                 !content.startsWith(getString(R.string.status_label))
             ) {
-                copyToClipboard(content)
+                copyToClipboard(content, getString(R.string.clipboard_scanned_text_label))
                 Toast.makeText(context, getString(R.string.text_copied_toast), Toast.LENGTH_SHORT).show()
                 true
             } else {
                 false
             }
+        }
+
+        binding.buttonClearScan.text = getString(R.string.button_clear_scan)
+        binding.buttonClearScan.setOnClickListener {
+            binding.textViewScannerResult.text = getString(R.string.scan_to_start_message)
+            binding.textViewScannerLabel.text = getString(R.string.status_label)
+
+            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
+            with (sharedPref.edit()) {
+                remove("last_scanned_text")
+                apply()
+            }
+
+            Toast.makeText(context, getString(R.string.scan_cleared_toast), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -189,7 +204,7 @@ class ScannerFragment : Fragment() {
         binding.textViewScannerLabel.text = getString(R.string.scanned_text_label)
     }
 
-    private fun copyToClipboard(text: CharSequence) {
+    private fun copyToClipboard(text: CharSequence, string: String) {
         val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText(getString(R.string.clipboard_scanned_text_label), text)
         clipboardManager.setPrimaryClip(clipData)
