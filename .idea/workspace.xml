@@ -48,13 +48,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2c50706a-4f56-4e93-9767-391d7281b129" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/unichristus/leitor_fiscal/ui/ScannerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/unichristus/leitor_fiscal/ui/ScannerFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_scanner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_scanner.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-en/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values-en/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-es/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values-es/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/unichristus/leitor_fiscal/ui/QrCodeFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/unichristus/leitor_fiscal/ui/QrCodeFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -246,12 +242,12 @@
       <map>
         <entry key="com.unichristus.leitor_fiscal">
           <value>
-            <CheckInfo lastCheckTimestamp="1746563234373" />
+            <CheckInfo lastCheckTimestamp="1746813107422" />
           </value>
         </entry>
         <entry key="com.unichristus.leitor_fiscal.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1746563234373" />
+            <CheckInfo lastCheckTimestamp="1746813107421" />
           </value>
         </entry>
       </map>

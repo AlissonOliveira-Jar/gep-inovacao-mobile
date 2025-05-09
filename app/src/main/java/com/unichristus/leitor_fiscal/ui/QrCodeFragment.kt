@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -83,10 +84,10 @@ class QrCodeFragment : Fragment() {
     }
 
     private fun startScanner() {
-        ScannerActivity.startScanner(
-            requireContext(),
-            listOf(Barcode.FORMAT_QR_CODE)
-        )
+        val scannerIntent = Intent(requireContext(), ScannerActivity::class.java).apply {
+            putIntegerArrayListExtra("formats", ArrayList(listOf(Barcode.FORMAT_QR_CODE)))
+        }
+        scannerLauncher.launch(scannerIntent)
     }
 
     @SuppressLint("SetTextI18n")
@@ -108,7 +109,7 @@ class QrCodeFragment : Fragment() {
                 Barcode.TYPE_DRIVER_LICENSE -> getString(R.string.driver_license_label)
                 else -> getString(R.string.other_type_label)
             }
-            binding.textViewQrType.text = "${getString(R.string.qr_type_label)} $formattedType"
+            binding.textViewQrType.text = formattedType
             binding.textViewQrContent.text = formatBarcodeData(rawValue, valueType)
         }
     }
@@ -120,12 +121,12 @@ class QrCodeFragment : Fragment() {
 
     private fun formatBarcodeData(rawValue: String, valueType: Int): String {
         return when (valueType) {
-            Barcode.TYPE_URL -> "${getString(R.string.url_label)} $rawValue"
-            Barcode.TYPE_CONTACT_INFO -> "${getString(R.string.contact_label)} $rawValue"
-            Barcode.TYPE_WIFI -> "${getString(R.string.wifi_label)} $rawValue"
-            Barcode.TYPE_CALENDAR_EVENT -> "${getString(R.string.event_label)} $rawValue"
-            Barcode.TYPE_EMAIL -> "${getString(R.string.email_label)} $rawValue"
-            else -> "${getString(R.string.qr_content_label)} $rawValue"
+            Barcode.TYPE_URL -> rawValue
+            Barcode.TYPE_CONTACT_INFO -> rawValue
+            Barcode.TYPE_WIFI -> rawValue
+            Barcode.TYPE_CALENDAR_EVENT -> rawValue
+            Barcode.TYPE_EMAIL -> rawValue
+            else -> rawValue
         }
     }
 
