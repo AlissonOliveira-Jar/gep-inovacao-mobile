@@ -56,4 +56,5 @@
     <string name="nav_label_scanner">Digitalizador</string>
     <string name="button_clear_scan">Limpar</string>
     <string name="scan_cleared_toast">Scan limpo!</string>
+    <string name="qr_cleared_toast">QR Code limpo!</string>
 </resources>

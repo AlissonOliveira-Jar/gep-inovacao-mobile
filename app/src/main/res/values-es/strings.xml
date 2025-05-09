@@ -56,4 +56,5 @@
     <string name="nav_label_scanner">Escáner</string>
     <string name="button_clear_scan">Limpiar</string>
     <string name="scan_cleared_toast">¡Escaneo limpiado!</string>
+    <string name="qr_cleared_toast">¡Código QR limpiado!</string>
 </resources>

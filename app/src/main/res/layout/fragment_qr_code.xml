@@ -66,10 +66,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textSize="16sp"
-                tools:text="https://www.google.com" />
+                android:textIsSelectable="true"
+                android:autoLink="web"
+                tools:text="https://www.google.com"
+                />
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/button_clear_qr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/button_clear_scan"
+        android:backgroundTint="@color/red_error"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        />
 
 </LinearLayout>

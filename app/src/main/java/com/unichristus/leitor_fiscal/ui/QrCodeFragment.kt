@@ -31,10 +31,9 @@ class QrCodeFragment : Fragment() {
         if (result.resultCode == Activity.RESULT_OK) {
             val barcodeValues = result.data?.getStringArrayListExtra("barcodes")
             val barcodeTypes = result.data?.getIntegerArrayListExtra("barcodeTypes")
-            if (barcodeValues != null && barcodeTypes != null) {
-                for (i in barcodeValues.indices) {
-                    updateUI(barcodeValues[i], barcodeTypes[i])
-                }
+            if (barcodeValues != null && barcodeTypes != null && barcodeValues.isNotEmpty()) {
+                updateUI(barcodeValues[0], barcodeTypes[0])
+                saveQrCodeResult(barcodeValues[0], barcodeTypes[0])
             }
         }
     }
@@ -43,6 +42,7 @@ class QrCodeFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) startScanner()
+        else showPermissionRationale()
     }
 
     override fun onCreateView(
@@ -56,6 +56,9 @@ class QrCodeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        loadQrCodeResult()
+
         binding.buttonOpenScanner.setOnClickListener { checkCameraPermission() }
 
         binding.textViewQrContent.setOnLongClickListener {
@@ -67,6 +70,16 @@ class QrCodeFragment : Fragment() {
             } else {
                 false
             }
+        }
+
+        binding.buttonClearQr.text = getString(R.string.button_clear_scan)
+        binding.buttonClearQr.setOnClickListener {
+            binding.textViewQrType.text = ""
+            binding.textViewQrContent.text = ""
+
+            clearQrCodeResult()
+
+            Toast.makeText(context, getString(R.string.qr_cleared_toast), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -150,5 +163,33 @@ class QrCodeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun saveQrCodeResult(rawValue: String, valueType: Int) {
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putString("last_qr_value", rawValue)
+            putInt("last_qr_type", valueType)
+            commit()
+        }
+    }
+
+    private fun loadQrCodeResult() {
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        val savedValue = sharedPref.getString("last_qr_value", null)
+        val savedType = sharedPref.getInt("last_qr_type", -1)
+
+        if (savedValue != null && savedType != -1) {
+            updateUI(savedValue, savedType)
+        }
+    }
+
+    private fun clearQrCodeResult() {
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            remove("last_qr_value")
+            remove("last_qr_type")
+            apply()
+        }
     }
 }
