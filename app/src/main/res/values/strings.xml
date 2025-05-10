@@ -57,4 +57,6 @@
     <string name="button_clear_scan">Limpar</string>
     <string name="scan_cleared_toast">Scan limpo!</string>
     <string name="qr_cleared_toast">QR Code limpo!</string>
+    <string name="error_prefix">Erro:</string>
+    <string name="error_message_with_prefix">%1$s %2$s</string>
 </resources>

@@ -57,4 +57,6 @@
     <string name="button_clear_scan">Clear</string>
     <string name="scan_cleared_toast">Scan cleared!</string>
     <string name="qr_cleared_toast">QR Code cleared!</string>
+    <string name="error_prefix">Error:</string>
+    <string name="error_message_with_prefix">%1$s %2$s</string>
 </resources>

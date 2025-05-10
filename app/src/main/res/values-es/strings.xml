@@ -57,4 +57,6 @@
     <string name="button_clear_scan">Limpiar</string>
     <string name="scan_cleared_toast">¡Escaneo limpiado!</string>
     <string name="qr_cleared_toast">¡Código QR limpiado!</string>
+    <string name="error_prefix">Error:</string>
+    <string name="error_message_with_prefix">%1$s %2$s</string>
 </resources>
