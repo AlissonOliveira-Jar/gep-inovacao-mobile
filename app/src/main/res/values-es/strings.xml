@@ -68,4 +68,6 @@
     <string name="receipt_total_label">TOTAL DEL CUPÓN: R$ %1$s</string>
     <string name="scanned_items_label">Artículos del Cupón:</string>
     <string name="no_products_identified">No se identificaron productos en el cupón.</string>
+    <string name="menu_saved_cupons">Cupones Guardados</string>
+    <string name="no_saved_cupons_message">Aún no hay cupones guardados.</string>
 </resources>

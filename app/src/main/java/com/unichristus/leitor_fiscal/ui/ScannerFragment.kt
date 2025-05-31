@@ -28,11 +28,12 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.unichristus.leitor_fiscal.R
-import com.unichristus.leitor_fiscal.data.Product
 import com.unichristus.leitor_fiscal.data.ScanState
 import com.unichristus.leitor_fiscal.data.CupomInfo
+import com.unichristus.leitor_fiscal.data.Product
 import com.unichristus.leitor_fiscal.databinding.FragmentScannerBinding
 import com.unichristus.leitor_fiscal.ui.adapter.ProductAdapter
+import com.unichristus.leitor_fiscal.ui.viewmodel.ScannerViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -132,20 +133,27 @@ class ScannerFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.scanState.collectLatest { state ->
                     Log.d("ScannerFragment", "Novo Estado do Scanner (Fragment): $state")
+                    if (_binding == null) return@collectLatest
+
                     when (state) {
                         is ScanState.Idle -> {
                             clearData()
+                            binding.buttonSaveScan.visibility = View.GONE
                         }
                         is ScanState.Loading -> {
                             showLoading(true)
+                            binding.buttonSaveScan.visibility = View.GONE
                         }
                         is ScanState.Success -> {
                             showLoading(false)
                             displayCupomInfo(state.cupomInfo)
                             showProducts(state.products)
+
                             if (state.products.isNotEmpty() || state.cupomInfo?.storeName != null) {
+                                binding.buttonSaveScan.visibility = View.VISIBLE
                                 binding.textViewScannerResult.visibility = View.GONE
                             } else {
+                                binding.buttonSaveScan.visibility = View.GONE
                                 binding.textViewScannerResult.text = getString(R.string.no_data_found)
                                 binding.textViewScannerResult.visibility = View.VISIBLE
                             }
@@ -153,6 +161,7 @@ class ScannerFragment : Fragment() {
                         is ScanState.Error -> {
                             showLoading(false)
                             showError(state.message)
+                            binding.buttonSaveScan.visibility = View.GONE
                         }
                     }
                 }
@@ -167,6 +176,16 @@ class ScannerFragment : Fragment() {
 
         binding.buttonClearScan.setOnClickListener {
             viewModel.clearScanData()
+        }
+
+        binding.buttonSaveScan.setOnClickListener {
+            val currentState = viewModel.scanState.value
+            if (currentState is ScanState.Success && currentState.cupomInfo != null) {
+                viewModel.saveCurrentScanData(currentState.cupomInfo, currentState.products)
+                Toast.makeText(requireContext(), "Cupom enviado para salvamento!", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(requireContext(), "Não há dados válidos para salvar.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.textViewScannerResult.setOnLongClickListener {
@@ -254,9 +273,11 @@ class ScannerFragment : Fragment() {
     private fun displayCupomInfo(cupomInfo: CupomInfo?) {
         if (_binding == null) return
 
-        val hasCupomData = cupomInfo?.storeName != null || cupomInfo?.cnpj != null || cupomInfo?.address != null ||
-                cupomInfo?.dateTime != null || cupomInfo?.ccf != null || cupomInfo?.coo != null ||
-                cupomInfo?.totalAmount != null
+        val hasCupomData = cupomInfo != null && (
+                cupomInfo.storeName != null || cupomInfo.cnpj != null || cupomInfo.address != null ||
+                        cupomInfo.dateTime != null || cupomInfo.ccf != null || cupomInfo.coo != null ||
+                        cupomInfo.totalAmount != null
+                )
 
         binding.layoutCupomInfo.visibility = if(hasCupomData) View.VISIBLE else View.GONE
 
@@ -265,12 +286,11 @@ class ScannerFragment : Fragment() {
         binding.textViewDateTime.text = getString(R.string.date_time_label, cupomInfo?.dateTime ?: "")
         binding.textViewAddress.text = getString(R.string.address_label, cupomInfo?.address ?: "")
         binding.textViewCcf.text = getString(R.string.ccf_coo_label, cupomInfo?.ccf ?: "-", cupomInfo?.coo ?: "-")
-        binding.textViewReceiptTotal.text = getString(R.string.receipt_total_label, cupomInfo?.totalAmount ?: "0,00")
+        binding.textViewReceiptTotal.text = getString(R.string.receipt_total_label, cupomInfo?.totalAmount ?: "N/A")
     }
 
     private fun clearCupomInfoDisplay() {
         if (_binding == null) return
-
         binding.layoutCupomInfo.visibility = View.GONE
         binding.textViewStoreName.text = ""
         binding.textViewCnpj.text = ""
@@ -284,16 +304,11 @@ class ScannerFragment : Fragment() {
         if (_binding == null) return
         productAdapter.submitList(products)
         binding.recyclerViewProducts.visibility = if (products.isNotEmpty()) View.VISIBLE else View.GONE
-        binding.buttonClearScan.visibility = View.VISIBLE
-        binding.textViewScannerLabel.text = if (products.isNotEmpty()) getString(R.string.scanned_items_label) else getString(R.string.status_label)
 
-        if (products.isEmpty() && viewModel.scanState.value is ScanState.Success) {
-            val successState = viewModel.scanState.value as ScanState.Success
-            if (successState.cupomInfo?.storeName == null) {
-                binding.textViewScannerLabel.text = getString(R.string.no_data_found)
-            } else if (successState.products.isEmpty()) {
-                binding.textViewScannerLabel.text = getString(R.string.no_products_identified)
-            }
+        if (products.isNotEmpty()) {
+            binding.textViewScannerLabel.text = getString(R.string.scanned_items_label)
+            binding.buttonClearScan.visibility = View.VISIBLE
+        } else {
         }
     }
 
@@ -317,6 +332,7 @@ class ScannerFragment : Fragment() {
         binding.textViewScannerResult.text = getString(R.string.scan_to_start_message)
         binding.buttonClearScan.visibility = View.GONE
         binding.textViewScannerLabel.text = getString(R.string.status_label)
+        binding.buttonSaveScan.visibility = View.GONE
         showLoading(false)
     }
 

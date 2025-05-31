@@ -17,4 +17,10 @@
         android:label="@string/nav_label_scanner"
         tools:layout="@layout/fragment_scanner" />
 
+    <fragment
+        android:id="@+id/nav_saved_cupons"
+        android:name="com.unichristus.leitor_fiscal.ui.SavedCuponsFragment"
+        android:label="@string/menu_saved_cupons"
+        tools:layout="@layout/fragment_saved_cupons" />
+
 </navigation>

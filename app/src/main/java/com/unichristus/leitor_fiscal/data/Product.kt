@@ -11,10 +11,3 @@ data class Product(
     val totalPrice: String,
     val discount: String = "0.0"
 )
-
-sealed class ScanState {
-    object Loading : ScanState()
-    data class Success(val products: List<Product>, val cupomInfo: CupomInfo?) : ScanState()
-    data class Error(val message: String) : ScanState()
-    object Idle : ScanState()
-}

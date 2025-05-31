@@ -1,20 +1,26 @@
-package com.unichristus.leitor_fiscal.ui
+package com.unichristus.leitor_fiscal.ui.viewmodel
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.unichristus.leitor_fiscal.data.Product
-import com.unichristus.leitor_fiscal.data.ScanState
 import com.unichristus.leitor_fiscal.data.CupomInfo
+import com.unichristus.leitor_fiscal.data.ScanState
+import com.unichristus.leitor_fiscal.data.Product
+import com.unichristus.leitor_fiscal.data.CupomDataSource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ScannerViewModel : ViewModel() {
+class ScannerViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _scanState: MutableStateFlow<ScanState> = MutableStateFlow(ScanState.Idle)
     val scanState: StateFlow<ScanState> = _scanState.asStateFlow()
+
+    private val cupomDataSource = CupomDataSource(application)
 
     fun processInvoiceText(invoiceText: String) {
         viewModelScope.launch {
@@ -33,12 +39,13 @@ class ScannerViewModel : ViewModel() {
             var coo: String? = null
             var receiptTotalAmount: String? = null
 
-            val products = mutableListOf<Product>()
+            val parsedProducts = mutableListOf<Product>()
             val itemAndProductCodes = mutableListOf<Pair<String, String>>()
             val quantitiesAndUnits = mutableListOf<Pair<String, String>>()
             val descriptions = mutableListOf<String>()
             val unitPrices = mutableListOf<String>()
             val itemTotals = mutableListOf<String>()
+
 
             val storeNamePattern = Regex("""^(LUJAS RENRER|LOJAS RENNER)""", RegexOption.IGNORE_CASE)
             val cnpjPattern = Regex("""CNPJ:?\s*([\d./-]+)""")
@@ -54,36 +61,32 @@ class ScannerViewModel : ViewModel() {
                         .replace("LUJAS RENRER", "LOJAS RENNER").trim()
                     storeNameLineIndex = index
                 }
-
-                if (storeNameLineIndex != -1 && address == null && index == storeNameLineIndex + 1 && (addressKeywordPattern.containsMatchIn(line) || line.contains("ASSIS BRASIL"))) {
-                    address = line
+                if (storeNameLineIndex != -1 && address == null && index == storeNameLineIndex + 1 && (addressKeywordPattern.containsMatchIn(line) || line.contains("ASSIS BRASIL", ignoreCase = true))) {
+                    address = line.trim()
                 }
-                if (cnpj == null) cnpjPattern.find(line)?.let { cnpj = it.groupValues[1] }
-                if (dateTime == null) dateTimePattern.find(line)?.let { dateTime = it.groupValues[1] }
+                if (cnpj == null) cnpjPattern.find(line)?.let { cnpj = it.groupValues[1].trim() }
+                if (dateTime == null) dateTimePattern.find(line)?.let { dateTime = it.groupValues[1].trim() }
                 if (ccf == null) ccfPattern.find(line)?.let { ccf = it.groupValues[1].trim() }
                 if (coo == null) cooPattern.find(line)?.let { coo = it.groupValues[1].trim().replace("O","0") }
             }
-
             if (address == null) {
-                lines.take(10).find { line -> addressKeywordPattern.containsMatchIn(line) && line.contains("ASSIS BRASIL") }?.let {
-                    address = it
+                lines.take(10).find { line -> addressKeywordPattern.containsMatchIn(line) && line.contains("ASSIS BRASIL", ignoreCase = true) }?.let {
+                    address = it.trim()
                 }
             }
 
             val endMarkerForTotal = "Total Inpostos Pagos"
             var searchEndIndex = lines.size
-            lines.indexOfLast { it.contains(endMarkerForTotal) }.takeIf { it != -1 }?.let {
+            lines.indexOfLast { it.contains(endMarkerForTotal, ignoreCase = true) }.takeIf { it != -1 }?.let {
                 searchEndIndex = it
             }
-
             for (i in (searchEndIndex - 1) downTo 0) {
                 val line = lines[i]
                 if (line.matches(Regex("""^[\d.,]+$""")) && (line == "288.90" || line == "288,90")) {
-                    receiptTotalAmount = line.replace('.', ',')
+                    receiptTotalAmount = line.replace('.', ',').trim()
                     break
                 }
-
-                if (line.contains("ITEH CÓDIGO") || line.contains("PERFUME PA") || line.contains("Blusa n3 4")) {
+                if (line.contains("ITEH CÓDIGO", ignoreCase = true) || line.contains("PERFUME PA", ignoreCase = true) || line.contains("Blusa n3 4", ignoreCase = true)) {
                     break
                 }
             }
@@ -111,27 +114,23 @@ class ScannerViewModel : ViewModel() {
                     matchedThisLine = true
                 }
                 if (matchedThisLine) continue
-
                 quantityUnitPattern.find(line)?.let {
                     quantitiesAndUnits.add(Pair(it.groupValues[1], it.groupValues[2]))
                     matchedThisLine = true
                 }
                 if (matchedThisLine) continue
-
-                if (line == "Blusa n3 4" || line == "PERFUME PA" || line == "BĪusa n3 4") {
+                if (line.equals("Blusa n3 4", ignoreCase = true) || line.equals("PERFUME PA", ignoreCase = true) || line.equals("BĪusa n3 4", ignoreCase = true)) {
                     descriptions.add(line)
                     matchedThisLine = true
                 }
                 if (matchedThisLine) continue
-
                 unitPriceStIatPattern.find(line)?.let {
                     unitPrices.add(it.groupValues[1])
                     matchedThisLine = true
                 }
                 if (matchedThisLine) continue
-
                 itemTotalPattern.find(line)?.let {
-                    if (itemTotals.size < itemAndProductCodes.size && (line == "89.90:" || line == "199,00::" || line == "89,90:" || line == "199.00::" )) {
+                    if (itemTotals.size < itemAndProductCodes.size && (line.startsWith("89.90") || line.startsWith("199,00") || line.startsWith("89,90") || line.startsWith("199.00"))) {
                         itemTotals.add(it.groupValues[1])
                         matchedThisLine = true
                     }
@@ -155,10 +154,9 @@ class ScannerViewModel : ViewModel() {
                 for (i in 0 until numPotentialProducts) {
                     val rawDescription = descriptions[i]
                     val correctedDescription = rawDescription
-                        .replace("BĪusa", "Blusa")
-                        .replace("PERFUHE", "PERFUME")
-
-                    products.add(
+                        .replace("BĪusa", "Blusa", ignoreCase = true)
+                        .replace("PERFUHE", "PERFUME", ignoreCase = true)
+                    parsedProducts.add(
                         Product(
                             code = itemAndProductCodes[i].second.trim(),
                             name = correctedDescription.trim(),
@@ -170,8 +168,8 @@ class ScannerViewModel : ViewModel() {
                 }
             }
 
-            if (products.isNotEmpty() || cupomInfo.storeName != null) {
-                _scanState.value = ScanState.Success(products, cupomInfo)
+            if (parsedProducts.isNotEmpty() || cupomInfo.storeName != null) {
+                _scanState.value = ScanState.Success(parsedProducts, cupomInfo)
             } else {
                 val errorMsg = if (invoiceText.isBlank()) {
                     "Nenhum texto foi detectado na imagem."
@@ -179,6 +177,24 @@ class ScannerViewModel : ViewModel() {
                     "Não foi possível extrair informações do cupom. Verifique o log do OCR e a lógica de parsing."
                 }
                 _scanState.value = ScanState.Error(errorMsg)
+            }
+        }
+    }
+
+    fun saveCurrentScanData(cupomInfoData: CupomInfo, productsData: List<Product>) {
+        viewModelScope.launch {
+            try {
+                val generatedCupomId = withContext(Dispatchers.IO) {
+                    cupomDataSource.insertCupomAndProducts(cupomInfoData, productsData)
+                }
+
+                if (generatedCupomId > 0) {
+                    Log.d("DB_SAVE", "Cupom ID $generatedCupomId e ${productsData.size} produtos salvos com sucesso via SQLite Puro.")
+                } else {
+                    Log.e("DB_SAVE_ERROR", "Falha ao salvar cupom via SQLite Puro (ID retornado: $generatedCupomId).")
+                }
+            } catch (e: Exception) {
+                Log.e("DB_SAVE_ERROR", "Erro ao salvar dados no banco (SQLite Puro):", e)
             }
         }
     }
