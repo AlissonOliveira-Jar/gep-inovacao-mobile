@@ -65,11 +65,7 @@ class ScannerActivity : ComponentActivity() {
         val formatsArray = formats.toIntArray()
 
         val options = BarcodeScannerOptions.Builder()
-            .apply {
-                for (format in formatsArray) {
-                    setBarcodeFormats(format)
-                }
-            }
+            .setBarcodeFormats(formats.firstOrNull() ?: Barcode.FORMAT_QR_CODE, *formats.drop(1).toIntArray())
             .build()
 
         val barcodeScanner = BarcodeScanning.getClient(options)

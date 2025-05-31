@@ -30,6 +30,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.unichristus.leitor_fiscal.R
 import com.unichristus.leitor_fiscal.data.Product
 import com.unichristus.leitor_fiscal.data.ScanState
+import com.unichristus.leitor_fiscal.data.CupomInfo
 import com.unichristus.leitor_fiscal.databinding.FragmentScannerBinding
 import com.unichristus.leitor_fiscal.ui.adapter.ProductAdapter
 import kotlinx.coroutines.flow.collectLatest
@@ -56,19 +57,19 @@ class ScannerFragment : Fragment() {
                     if (imageUri != null) {
                         processImageForText(imageUri)
                     } else {
-                        Log.e("ScannerFragment", "Nenhum URI de imagem encontrado no resultado.")
+                        Log.e("ScannerFragment", "Nenhum URI de imagem encontrado no resultado do GMS Scanner.")
                         viewModel.processInvoiceText("")
                     }
                 } ?: run {
-                    Log.e("ScannerFragment", "Resultado da digitalização nulo.")
+                    Log.e("ScannerFragment", "Resultado da digitalização GMS nulo.")
                     viewModel.processInvoiceText("")
                 }
             } ?: run {
-                Log.e("ScannerFragment", "Dados do resultado nulos.")
+                Log.e("ScannerFragment", "Dados do resultado GMS nulos.")
                 viewModel.processInvoiceText("")
             }
         } else {
-            Log.e("ScannerFragment", "Digitalização cancelada ou falhou.")
+            Log.e("ScannerFragment", "Digitalização GMS cancelada ou falhou.")
             viewModel.processInvoiceText("")
         }
     }
@@ -77,9 +78,21 @@ class ScannerFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            startScanner()
+            startGmsDocumentScanner()
         } else {
             showPermissionRationale()
+        }
+    }
+
+    private val imagePickerLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            Log.d("ScannerFragment", "Imagem original selecionada da galeria: $it")
+            processImageForText(it)
+        } ?: run {
+            Log.e("ScannerFragment", "Nenhuma imagem selecionada.")
+            viewModel.processInvoiceText("")
         }
     }
 
@@ -95,21 +108,8 @@ class ScannerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        setupObservers()
         setupClickListeners()
-
-        when(viewModel.scanState.value) {
-            is ScanState.Idle -> clearData()
-            is ScanState.Loading -> showLoading(true)
-            is ScanState.Success -> {
-                val products = (viewModel.scanState.value as ScanState.Success).products
-                showProducts(products)
-            }
-            is ScanState.Error -> {
-                val message = (viewModel.scanState.value as ScanState.Error).message
-                showError(message)
-            }
-        }
+        setupObservers()
     }
 
     override fun onDestroyView() {
@@ -131,19 +131,24 @@ class ScannerFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.scanState.collectLatest { state ->
-                    Log.d("ScannerFragment", "Estado do Scanner: $state")
+                    Log.d("ScannerFragment", "Novo Estado do Scanner (Fragment): $state")
                     when (state) {
                         is ScanState.Idle -> {
                             clearData()
                         }
                         is ScanState.Loading -> {
                             showLoading(true)
-                            productAdapter.submitList(emptyList())
-                            binding.textViewScannerResult.text = ""
                         }
                         is ScanState.Success -> {
                             showLoading(false)
+                            displayCupomInfo(state.cupomInfo)
                             showProducts(state.products)
+                            if (state.products.isNotEmpty() || state.cupomInfo?.storeName != null) {
+                                binding.textViewScannerResult.visibility = View.GONE
+                            } else {
+                                binding.textViewScannerResult.text = getString(R.string.no_data_found)
+                                binding.textViewScannerResult.visibility = View.VISIBLE
+                            }
                         }
                         is ScanState.Error -> {
                             showLoading(false)
@@ -156,7 +161,9 @@ class ScannerFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        binding.buttonOpenScanner.setOnClickListener { checkCameraPermission() }
+        binding.buttonOpenScanner.setOnClickListener {
+            pickImageDirectly()
+        }
 
         binding.buttonClearScan.setOnClickListener {
             viewModel.clearScanData()
@@ -183,23 +190,19 @@ class ScannerFragment : Fragment() {
             ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> startScanner()
-
+            ) == PackageManager.PERMISSION_GRANTED -> startGmsDocumentScanner()
             shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> showPermissionRationale()
-
             else -> requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
-    private fun startScanner() {
+    private fun startGmsDocumentScanner() {
         val options = GmsDocumentScannerOptions.Builder()
             .setGalleryImportAllowed(true)
             .setScannerMode(GmsDocumentScannerOptions.SCANNER_MODE_FULL)
-            .setResultFormats(GmsDocumentScannerOptions.RESULT_FORMAT_JPEG, GmsDocumentScannerOptions.RESULT_FORMAT_PDF)
+            .setResultFormats(GmsDocumentScannerOptions.RESULT_FORMAT_JPEG)
             .build()
-
         val scanner = GmsDocumentScanning.getClient(options)
-
         scanner.getStartScanIntent(requireActivity())
             .addOnSuccessListener { intentSender ->
                 scannerLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
@@ -210,14 +213,14 @@ class ScannerFragment : Fragment() {
             }
     }
 
+    private fun pickImageDirectly() {
+        imagePickerLauncher.launch("image/*")
+    }
+
     private fun processImageForText(imageUri: Uri) {
-        viewModel.processInvoiceText(getString(R.string.processing_image_text))
-
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-
         try {
             val inputImage = InputImage.fromFilePath(requireContext(), imageUri)
-
             recognizer.process(inputImage)
                 .addOnSuccessListener { visionText ->
                     val extractedText = visionText.text
@@ -235,29 +238,70 @@ class ScannerFragment : Fragment() {
     }
 
     private fun showLoading(loading: Boolean) {
+        if (_binding == null) return
+
         binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
         if (loading) {
             binding.recyclerViewProducts.visibility = View.GONE
-            binding.textViewScannerResult.visibility = View.GONE
+            binding.textViewScannerResult.text = getString(R.string.processing_image_text)
+            binding.textViewScannerResult.visibility = View.VISIBLE
             binding.buttonClearScan.visibility = View.GONE
             binding.textViewScannerLabel.text = getString(R.string.status_label)
+            clearCupomInfoDisplay()
         }
     }
 
+    private fun displayCupomInfo(cupomInfo: CupomInfo?) {
+        if (_binding == null) return
+
+        val hasCupomData = cupomInfo?.storeName != null || cupomInfo?.cnpj != null || cupomInfo?.address != null ||
+                cupomInfo?.dateTime != null || cupomInfo?.ccf != null || cupomInfo?.coo != null ||
+                cupomInfo?.totalAmount != null
+
+        binding.layoutCupomInfo.visibility = if(hasCupomData) View.VISIBLE else View.GONE
+
+        binding.textViewStoreName.text = getString(R.string.store_name_label, cupomInfo?.storeName ?: "")
+        binding.textViewCnpj.text = getString(R.string.cnpj_label, cupomInfo?.cnpj ?: "")
+        binding.textViewDateTime.text = getString(R.string.date_time_label, cupomInfo?.dateTime ?: "")
+        binding.textViewAddress.text = getString(R.string.address_label, cupomInfo?.address ?: "")
+        binding.textViewCcf.text = getString(R.string.ccf_coo_label, cupomInfo?.ccf ?: "-", cupomInfo?.coo ?: "-")
+        binding.textViewReceiptTotal.text = getString(R.string.receipt_total_label, cupomInfo?.totalAmount ?: "0,00")
+    }
+
+    private fun clearCupomInfoDisplay() {
+        if (_binding == null) return
+
+        binding.layoutCupomInfo.visibility = View.GONE
+        binding.textViewStoreName.text = ""
+        binding.textViewCnpj.text = ""
+        binding.textViewDateTime.text = ""
+        binding.textViewAddress.text = ""
+        binding.textViewCcf.text = ""
+        binding.textViewReceiptTotal.text = ""
+    }
+
     private fun showProducts(products: List<Product>) {
+        if (_binding == null) return
         productAdapter.submitList(products)
-        binding.recyclerViewProducts.visibility = View.VISIBLE
-        binding.textViewScannerResult.visibility = View.GONE
+        binding.recyclerViewProducts.visibility = if (products.isNotEmpty()) View.VISIBLE else View.GONE
         binding.buttonClearScan.visibility = View.VISIBLE
-        binding.textViewScannerLabel.text = getString(R.string.scanned_text_label)
-        if (products.isEmpty()) {
-            showError("Nenhum produto identificado.")
+        binding.textViewScannerLabel.text = if (products.isNotEmpty()) getString(R.string.scanned_items_label) else getString(R.string.status_label)
+
+        if (products.isEmpty() && viewModel.scanState.value is ScanState.Success) {
+            val successState = viewModel.scanState.value as ScanState.Success
+            if (successState.cupomInfo?.storeName == null) {
+                binding.textViewScannerLabel.text = getString(R.string.no_data_found)
+            } else if (successState.products.isEmpty()) {
+                binding.textViewScannerLabel.text = getString(R.string.no_products_identified)
+            }
         }
     }
 
     private fun showError(message: String) {
+        if (_binding == null) return
         productAdapter.submitList(emptyList())
         binding.recyclerViewProducts.visibility = View.GONE
+        clearCupomInfoDisplay()
         binding.textViewScannerResult.visibility = View.VISIBLE
         binding.textViewScannerResult.text = getString(R.string.error_message_with_prefix, getString(R.string.error_prefix), message)
         binding.buttonClearScan.visibility = View.VISIBLE
@@ -265,8 +309,10 @@ class ScannerFragment : Fragment() {
     }
 
     private fun clearData() {
+        if (_binding == null) return
         productAdapter.submitList(emptyList())
         binding.recyclerViewProducts.visibility = View.GONE
+        clearCupomInfoDisplay()
         binding.textViewScannerResult.visibility = View.VISIBLE
         binding.textViewScannerResult.text = getString(R.string.scan_to_start_message)
         binding.buttonClearScan.visibility = View.GONE
@@ -287,5 +333,5 @@ class ScannerFragment : Fragment() {
             .setPositiveButton(getString(R.string.understand_button)) { _, _ ->
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA)
             }.setNegativeButton(getString(R.string.cancel_button), null).show()
-        }
+    }
 }

@@ -12,8 +12,64 @@
         android:id="@+id/button_open_scanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/scan_document_button"
-        />
+        android:text="@string/scan_document_button" />
+
+    <LinearLayout
+        android:id="@+id/layoutCupomInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone" tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/textViewStoreName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Estabelecimento: LOJAS RENNER S.A."/>
+
+        <TextView
+            android:id="@+id/textViewCnpj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            tools:text="CNPJ: 92.754.738/0013-04"/>
+
+        <TextView
+            android:id="@+id/textViewAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            tools:text="Endereço: AV. ASSIS BRASIL, 1010"/>
+
+        <TextView
+            android:id="@+id/textViewDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            tools:text="Data/Hora: 03/05/2013 10:05:40"/>
+
+        <TextView
+            android:id="@+id/textViewCcf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            tools:text="CCF: 002260 COO: 010169"/>
+
+        <TextView
+            android:id="@+id/textViewReceiptTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="end"
+            tools:text="TOTAL DO CUPOM: R$ 288,90"/>
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/textViewScannerLabel"
@@ -22,8 +78,7 @@
         android:layout_marginTop="16dp"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:text="@string/status_label"
-        />
+        android:text="@string/status_label" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -46,8 +101,7 @@
             android:layout_height="match_parent"
             android:textSize="18sp"
             android:textIsSelectable="true"
-            android:text="@string/scan_to_start_message"
-            />
+            android:text="@string/scan_to_start_message" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewProducts"

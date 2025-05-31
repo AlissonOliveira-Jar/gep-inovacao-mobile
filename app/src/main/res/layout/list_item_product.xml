@@ -10,23 +10,24 @@
         android:id="@+id/textViewProductName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        tools:text="QUEIJO CAMBI COALHO P/FAT KG" />
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="Nome do Produto Exemplo" />
 
     <TextView
         android:id="@+id/textViewProductDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        tools:text="0,526KG x 37,99 = 19,98" />
+        android:textSize="14sp"
+        tools:text="1.000 UN x 10.00 = 10.00" />
 
     <TextView
         android:id="@+id/textViewProductDiscount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:textColor="@android:color/holo_red_dark"
-        tools:text="Desconto: -1,58"
+        android:textSize="14sp"
+        android:textColor="@color/design_default_color_error"
+        tools:text="Desconto: 1.00"
         android:visibility="gone"
         tools:visibility="visible"/>
 

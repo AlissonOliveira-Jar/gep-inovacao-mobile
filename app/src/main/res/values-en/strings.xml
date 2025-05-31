@@ -59,4 +59,13 @@
     <string name="qr_cleared_toast">QR Code cleared!</string>
     <string name="error_prefix">Error:</string>
     <string name="error_message_with_prefix">%1$s %2$s</string>
+    <string name="no_data_found">Nenhum dado relevante foi encontrado no cupom.</string>
+    <string name="store_name_label">Estabelecimento: %1$s</string>
+    <string name="cnpj_label">CNPJ: %1$s</string>
+    <string name="date_time_label">Data/Hora: %1$s</string>
+    <string name="address_label">Endereço: %1$s</string>
+    <string name="ccf_coo_label">CCF: %1$s  COO: %2$s</string>
+    <string name="receipt_total_label">TOTAL DO CUPOM: R$ %1$s</string>
+    <string name="scanned_items_label">Itens do Cupom:</string>
+    <string name="no_products_identified">Nenhum produto foi identificado no cupom.</string>
 </resources>
