@@ -11,8 +11,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SavedCupomAdapter(private val onItemClicked: (CupomInfo) -> Unit) :
-    ListAdapter<CupomInfo, SavedCupomAdapter.SavedCupomViewHolder>(SavedCupomDiffCallback()) {
+class SavedCupomAdapter(
+    private val onItemClicked: (CupomInfo) -> Unit,
+    private val onDeleteClicked: (CupomInfo) -> Unit
+) : ListAdapter<CupomInfo, SavedCupomAdapter.SavedCupomViewHolder>(SavedCupomDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedCupomViewHolder {
         val binding = ListItemSavedCupomBinding.inflate(
@@ -25,7 +27,7 @@ class SavedCupomAdapter(private val onItemClicked: (CupomInfo) -> Unit) :
 
     override fun onBindViewHolder(holder: SavedCupomViewHolder, position: Int) {
         val cupom = getItem(position)
-        holder.bind(cupom)
+        holder.bind(cupom, onDeleteClicked)
         holder.itemView.setOnClickListener {
             onItemClicked(cupom)
         }
@@ -36,14 +38,17 @@ class SavedCupomAdapter(private val onItemClicked: (CupomInfo) -> Unit) :
 
         private val dateTimeFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
 
-        fun bind(cupom: CupomInfo) {
+        fun bind(cupom: CupomInfo, onDeleteClicked: (CupomInfo) -> Unit) {
             binding.textViewSavedStoreName.text = cupom.storeName ?: "Estabelecimento Desconhecido"
+            binding.textViewSavedDateTime.text =
+                cupom.scannedAtTimestamp?.let { dateTimeFormatter.format(Date(it)) }
+                    ?: "Data Indisponível"
+            binding.textViewSavedTotalAmount.text =
+                if (cupom.totalAmount != null) "Total: R$ ${cupom.totalAmount}" else "Total: N/A"
 
-            binding.textViewSavedDateTime.text = cupom.scannedAtTimestamp?.let { timestamp ->
-                dateTimeFormatter.format(Date(timestamp))
-            } ?: "Data Indisponível"
-
-            binding.textViewSavedTotalAmount.text = if (cupom.totalAmount != null) "Total: R$ ${cupom.totalAmount}" else "Total: N/A"
+            binding.buttonDeleteCupom.setOnClickListener {
+                onDeleteClicked(cupom)
+            }
         }
     }
 

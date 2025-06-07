@@ -183,6 +183,7 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
 
     fun saveCurrentScanData(cupomInfoData: CupomInfo, productsData: List<Product>) {
         viewModelScope.launch {
+            Log.d("DB_SAVE_FLOW", "Iniciando processo de salvamento...")
             try {
                 val generatedCupomId = withContext(Dispatchers.IO) {
                     cupomDataSource.insertCupomAndProducts(cupomInfoData, productsData)

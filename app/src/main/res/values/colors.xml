@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red_error">#F44336</color>
+    <color name="icon_delete_red">#D32F2F</color>
 </resources>

@@ -120,4 +120,18 @@ class CupomDataSource(context: Context) {
         }
         return cuponsList
     }
+
+    fun deleteCupomById(cupomId: Long): Int {
+        val db = dbHelper.writableDatabase
+        var rowsDeleted = 0
+        try {
+            val selection = "${BaseColumns._ID} = ?"
+            val selectionArgs = arrayOf(cupomId.toString())
+            rowsDeleted = db.delete(CupomDbContract.CupomEntry.TABLE_NAME, selection, selectionArgs)
+            Log.d("DB_DELETE", "$rowsDeleted cupom(ns) deletado(s) com ID: $cupomId")
+        } catch (e: Exception) {
+            Log.e("CupomDataSource", "Erro ao deletar cupom com ID: $cupomId", e)
+        }
+        return rowsDeleted
+    }
 }
