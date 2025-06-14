@@ -22,5 +22,18 @@
         android:name="com.unichristus.leitor_fiscal.ui.SavedCuponsFragment"
         android:label="@string/menu_saved_cupons"
         tools:layout="@layout/fragment_saved_cupons" />
+        <action
+            android:id="@+id/action_savedCupons_to_cupomDetail"
+            app:destination="@id/cupomDetailFragment" />
+
+    <fragment
+        android:id="@+id/cupomDetailFragment"
+        android:name="com.unichristus.leitor_fiscal.ui.CupomDetailFragment"
+        android:label="Detalhes do Cupom"
+        tools:layout="@layout/fragment_cupom_detail">
+        <argument
+            android:name="cupomId"
+            app:argType="long" />
+    </fragment>
 
 </navigation>

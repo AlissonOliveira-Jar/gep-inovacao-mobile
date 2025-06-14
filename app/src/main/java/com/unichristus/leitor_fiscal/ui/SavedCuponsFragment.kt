@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
 import com.unichristus.leitor_fiscal.R
 import com.unichristus.leitor_fiscal.data.CupomInfo
 import com.unichristus.leitor_fiscal.databinding.FragmentSavedCuponsBinding
@@ -48,7 +49,10 @@ class SavedCuponsFragment : Fragment() {
     private fun setupRecyclerView() {
         savedCupomAdapter = SavedCupomAdapter(
             onItemClicked = { cupom ->
-                Toast.makeText(context, "Visualizando detalhes do cupom ID: ${cupom.id}", Toast.LENGTH_SHORT).show()
+                cupom.id?.let { id ->
+                    val action = SavedCuponsFragmentDirections.actionSavedCuponsToCupomDetail(id)
+                    findNavController().navigate(action)
+                }
             },
             onDeleteClicked = { cupom ->
                 showDeleteConfirmationDialog(cupom)

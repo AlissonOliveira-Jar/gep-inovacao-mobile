@@ -121,6 +121,61 @@ class CupomDataSource(context: Context) {
         return cuponsList
     }
 
+    fun getCupomById(cupomId: Long): CupomInfo? {
+        val db: SQLiteDatabase = dbHelper.readableDatabase
+        var cursor: Cursor? = null
+        var cupomInfo: CupomInfo? = null
+
+        try {
+            val selection = "${BaseColumns._ID} = ?"
+            val selectionArgs = arrayOf(cupomId.toString())
+            cursor = db.query(
+                CupomDbContract.CupomEntry.TABLE_NAME, null, selection, selectionArgs, null, null, null
+            )
+            if (cursor.moveToFirst()) {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val storeName = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.CupomEntry.COLUMN_STORE_NAME))
+                val cnpj = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.CupomEntry.COLUMN_CNPJ))
+                val address = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.CupomEntry.COLUMN_ADDRESS))
+                val dateTime = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.CupomEntry.COLUMN_DATE_TIME))
+                val ccf = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.CupomEntry.COLUMN_CCF))
+                val coo = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.CupomEntry.COLUMN_COO))
+                val totalAmount = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.CupomEntry.COLUMN_TOTAL_AMOUNT))
+                val scannedAt = cursor.getLong(cursor.getColumnIndexOrThrow(CupomDbContract.CupomEntry.COLUMN_SCANNED_AT_TIMESTAMP))
+                cupomInfo = CupomInfo(id, storeName, cnpj, address, dateTime, ccf, coo, totalAmount, scannedAt)
+            }
+        } finally {
+            cursor?.close()
+        }
+        return cupomInfo
+    }
+
+    fun getProductsForCupom(cupomId: Long): List<Product> {
+        val productsList = mutableListOf<Product>()
+        val db: SQLiteDatabase = dbHelper.readableDatabase
+        var cursor: Cursor? = null
+        try {
+            val selection = "${CupomDbContract.ProductEntry.COLUMN_CUPOM_ID_FK} = ?"
+            val selectionArgs = arrayOf(cupomId.toString())
+            cursor = db.query(
+                CupomDbContract.ProductEntry.TABLE_NAME, null, selection, selectionArgs, null, null, null
+            )
+            while (cursor.moveToNext()) {
+                val uuid = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.ProductEntry.COLUMN_PRODUCT_UUID))
+                val code = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.ProductEntry.COLUMN_CODE))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.ProductEntry.COLUMN_NAME))
+                val quantity = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.ProductEntry.COLUMN_QUANTITY))
+                val unitPrice = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.ProductEntry.COLUMN_UNIT_PRICE))
+                val totalPrice = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.ProductEntry.COLUMN_TOTAL_PRICE))
+                val discount = cursor.getString(cursor.getColumnIndexOrThrow(CupomDbContract.ProductEntry.COLUMN_DISCOUNT))
+                productsList.add(Product(uuid, code, name, quantity, unitPrice, totalPrice, discount))
+            }
+        } finally {
+            cursor?.close()
+        }
+        return productsList
+    }
+
     fun deleteCupomById(cupomId: Long): Int {
         val db = dbHelper.writableDatabase
         var rowsDeleted = 0
