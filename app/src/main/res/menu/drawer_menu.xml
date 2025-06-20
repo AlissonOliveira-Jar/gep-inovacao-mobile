@@ -13,5 +13,10 @@
             android:icon="@drawable/ic_scanner"
             android:title="@string/menu_scanner_mode"
             />
+        <item
+            android:id="@+id/nav_saved_cupons"
+            android:icon="@drawable/round_save_24"
+            android:title="@string/menu_saved_cupons"
+            />
     </group>
 </menu>

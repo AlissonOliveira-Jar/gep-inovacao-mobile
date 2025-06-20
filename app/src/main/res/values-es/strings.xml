@@ -57,4 +57,17 @@
     <string name="button_clear_scan">Limpiar</string>
     <string name="scan_cleared_toast">¡Escaneo limpiado!</string>
     <string name="qr_cleared_toast">¡Código QR limpiado!</string>
+    <string name="error_prefix">Error:</string>
+    <string name="error_message_with_prefix">%1$s %2$s</string>
+    <string name="no_data_found">No se encontraron datos relevantes en el cupón.</string>
+    <string name="store_name_label">Establecimiento: %1$s</string>
+    <string name="cnpj_label">CNPJ: %1$s</string>
+    <string name="date_time_label">Fecha/Hora: %1$s</string>
+    <string name="address_label">Dirección: %1$s</string>
+    <string name="ccf_coo_label">CCF: %1$s  COO: %2$s</string>
+    <string name="receipt_total_label">TOTAL DEL CUPÓN: R$ %1$s</string>
+    <string name="scanned_items_label">Artículos del Cupón:</string>
+    <string name="no_products_identified">No se identificaron productos en el cupón.</string>
+    <string name="menu_saved_cupons">Cupones Guardados</string>
+    <string name="no_saved_cupons_message">Aún no hay cupones guardados.</string>
 </resources>

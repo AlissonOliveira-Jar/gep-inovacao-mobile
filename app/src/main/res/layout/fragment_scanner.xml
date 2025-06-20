@@ -12,53 +12,126 @@
         android:id="@+id/button_open_scanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/scan_document_button"
-        />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:text="@string/scan_document_button" />
 
     <LinearLayout
+        android:id="@+id/layoutCupomInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone" tools:visibility="visible">
 
-            <TextView
-                android:id="@+id/textViewScannerLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="@string/status_label"
-                />
+        <TextView
+            android:id="@+id/textViewStoreName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Estabelecimento: LOJAS RENNER S.A."/>
 
-            <TextView
-                android:id="@+id/textViewScannerResult"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textSize="18sp"
-                android:textIsSelectable="true"
-                android:text="@string/scan_to_start_message"
-                />
+        <TextView
+            android:id="@+id/textViewCnpj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            tools:text="CNPJ: 92.754.738/0013-04"/>
 
-            <Button
-                android:id="@+id/button_clear_scan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/button_clear_scan"
-                android:backgroundTint="@color/red_error"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                />
+        <TextView
+            android:id="@+id/textViewAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            tools:text="Endereço: AV. ASSIS BRASIL, 1010"/>
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/textViewDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            tools:text="Data/Hora: 03/05/2013 10:05:40"/>
 
-    </ScrollView>
+        <TextView
+            android:id="@+id/textViewCcf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            tools:text="CCF: 002260 COO: 010169"/>
+
+        <TextView
+            android:id="@+id/textViewReceiptTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="end"
+            tools:text="TOTAL DO CUPOM: R$ 288,90"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/textViewScannerLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="@string/status_label" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/textViewScannerResult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:textIsSelectable="true"
+            android:text="@string/scan_to_start_message" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewProducts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:listitem="@layout/list_item_product" />
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/button_save_scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Salvar Cupom"
+        android:backgroundTint="@color/purple_700" android:textColor="@android:color/white"
+        android:visibility="gone" tools:visibility="visible"/>
+
+    <Button
+        android:id="@+id/button_clear_scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/button_clear_scan"
+        android:backgroundTint="@color/red_error"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </LinearLayout>
